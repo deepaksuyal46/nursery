@@ -14,10 +14,10 @@ const PORT = process.env.PORT || 5000;
 const verifyEmailTransportInBackground = () => {
   void verifyEmailTransport()
     .then(() => {
-      console.info('Email delivery transport verified.', getEmailTransportLogContext());
+      console.info('Email provider configured.', getEmailTransportLogContext());
     })
     .catch((error) => {
-      console.error('Email delivery transport verification failed', {
+      console.error('Email provider configuration failed', {
         ...getEmailTransportLogContext(),
         ...getEmailErrorDetails(error)
       });
