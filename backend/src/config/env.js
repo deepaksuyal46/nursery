@@ -38,7 +38,7 @@ const configuredClientUrls = [
 ];
 
 const env = {
-  port: Number(process.env.PORT || 4000),
+  port: Number(process.env.PORT || 5000),
   nodeEnv,
   clientUrl: process.env.CLIENT_URL || 'http://localhost:4200',
   clientUrls: configuredClientUrls.length > 0 ? configuredClientUrls : ['http://localhost:4200'],
@@ -57,7 +57,7 @@ const env = {
   emailFrom: process.env.EMAIL_FROM || process.env.SMTP_FROM || process.env.SMTP_USER || '',
   smtpHost: process.env.SMTP_HOST || '',
   smtpPort,
-  smtpSecure: parseBoolean(process.env.SMTP_SECURE, smtpPort === 465),
+  smtpSecure: parseBoolean(process.env.SMTP_SECURE, false),
   smtpService: process.env.SMTP_SERVICE || '',
   smtpUser: process.env.SMTP_USER || '',
   smtpPass: process.env.SMTP_PASS || '',

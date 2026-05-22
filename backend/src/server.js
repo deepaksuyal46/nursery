@@ -1,7 +1,6 @@
 import app from './app.js';
 import { ensurePendingRegistrationsTable } from './config/bootstrap.js';
 import db from './config/db.js';
-import env from './config/env.js';
 import {
   getEmailDeliveryStatus,
   getEmailErrorDetails,
@@ -9,13 +8,14 @@ import {
 } from './utils/mailer.js';
 
 let server = null;
+const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   await ensurePendingRegistrationsTable();
   const emailStatus = getEmailDeliveryStatus();
 
   if (!emailStatus.configured) {
-    console.warn('Email delivery is disabled.', {
+    console.warn('Email service not configured', {
       missing: emailStatus.missing
     });
   } else {
@@ -36,8 +36,8 @@ const start = async () => {
     }
   }
 
-  server = app.listen(env.port, () => {
-    console.log(`Nursery backend listening on port ${env.port}`);
+  server = app.listen(Number(PORT), () => {
+    console.log(`Nursery backend listening on port ${PORT}`);
   });
 };
 

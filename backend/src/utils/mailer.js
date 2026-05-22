@@ -69,7 +69,7 @@ export const getEmailDeliveryStatus = () => {
       }
 
       if (!env.smtpService && env.smtpHost && env.smtpPort === 465 && !env.smtpSecure) {
-        warnings.push('SMTP_PORT is 465, so SMTP_SECURE was forced to true for the transport.');
+        warnings.push('SMTP_PORT is 465 with SMTP_SECURE=false. Prefer SMTP_PORT=587 and SMTP_SECURE=false on Render.');
       }
     }
   }
@@ -84,7 +84,7 @@ export const getEmailDeliveryStatus = () => {
       service: mode === 'service' ? env.smtpService || null : null,
       host: mode === 'host' ? env.smtpHost || null : null,
       port: mode === 'host' ? env.smtpPort : null,
-      secure: mode === 'host' ? env.smtpSecure || env.smtpPort === 465 : null,
+      secure: mode === 'host' ? env.smtpSecure : null,
       user: mode === 'resend' ? null : env.smtpUser || null,
       from: env.emailFrom || null
     }
@@ -162,26 +162,31 @@ const createEmailContent = ({ name, otp, expiresInMinutes }) => {
 };
 
 const getHostTransportConfig = async () => {
-  const hostname = env.smtpHost;
+  const transportConfig = {
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  };
+  const hostname = transportConfig.host;
 
   if (!hostname) {
-    throw new ApiError(500, 'SMTP_HOST is required for host-based email delivery.');
+    throw new ApiError(503, 'Email service not configured.');
   }
 
-  const [ipv4Address] = await dns.resolve4(hostname);
+  const ipv4Addresses = await dns.resolve4(hostname).catch(() => []);
+  const [ipv4Address] = ipv4Addresses;
 
   if (!ipv4Address) {
-    throw new ApiError(500, `No IPv4 address found for SMTP host ${hostname}.`);
+    return transportConfig;
   }
 
   return {
+    ...transportConfig,
     host: ipv4Address,
-    port: env.smtpPort,
-    secure: env.smtpSecure || env.smtpPort === 465,
-    auth: {
-      user: env.smtpUser,
-      pass: env.smtpPass
-    },
     tls: {
       servername: hostname
     }
@@ -195,8 +200,8 @@ const getTransporter = async () => {
 
   if (!isEmailDeliveryConfigured()) {
     throw new ApiError(
-      500,
-      'Email delivery is not configured. Set RESEND_API_KEY and EMAIL_FROM, or configure SMTP.'
+      503,
+      'Email service not configured.'
     );
   }
 
