@@ -1,9 +1,24 @@
 import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envFilePath = path.resolve(__dirname, '../../.env');
+const localEnvFilePath = path.resolve(__dirname, '../../.env.local');
+
+dotenv.config({ path: localEnvFilePath });
+dotenv.config({ path: envFilePath });
 
 const parseBoolean = (value, fallback) =>
   typeof value === 'string' ? value === 'true' : fallback;
+const parseList = (value) =>
+  typeof value === 'string'
+    ? value
+        .split(',')
+        .map((entry) => entry.trim().replace(/\/+$/, ''))
+        .filter(Boolean)
+    : [];
 
 const smtpPort = Number(process.env.SMTP_PORT || 587);
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -17,10 +32,16 @@ if (nodeEnv === 'production' && !databaseUrl) {
   throw new Error('DATABASE_URL is required in production.');
 }
 
+const configuredClientUrls = [
+  ...parseList(process.env.CLIENT_URLS),
+  ...parseList(process.env.CLIENT_URL)
+];
+
 const env = {
   port: Number(process.env.PORT || 4000),
   nodeEnv,
   clientUrl: process.env.CLIENT_URL || 'http://localhost:4200',
+  clientUrls: configuredClientUrls.length > 0 ? configuredClientUrls : ['http://localhost:4200'],
   allowDevOtpInProduction: parseBoolean(process.env.ALLOW_DEV_OTP_IN_PRODUCTION, false),
   databaseUrl,
   databaseSsl: parseBoolean(process.env.DATABASE_SSL, nodeEnv === 'production'),

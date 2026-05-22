@@ -13,13 +13,21 @@ import {
     <footer class="border-t border-white/60 bg-white/70">
       <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.15fr,0.75fr,0.9fr] lg:px-8">
         <div>
-          <img
-            src="assets/uttarakhand-succulent-logo.svg"
-            alt="Uttarakhand Succulent"
-            width="640"
-            height="144"
-            class="block h-12 w-auto sm:h-14"
-          />
+          <div class="brand-lockup flex items-center gap-4">
+            <span class="brand-logo-frame rounded-[1.6rem] bg-[#050505] p-2 shadow-[0_20px_38px_rgba(15,23,42,0.22)]">
+              <img
+                src="assets/uttarakhand-succulent-logo.png"
+                alt="Uttarakhand Succulent"
+                width="1024"
+                height="1024"
+                class="brand-logo-image block h-20 w-20 rounded-[1.2rem] object-cover sm:h-24 sm:w-24"
+              />
+            </span>
+            <div class="brand-wordmark">
+              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Bhimtal Nursery</p>
+              <h2 class="mt-2 font-serif text-3xl leading-none text-moss">Uttarakhand Succulent</h2>
+            </div>
+          </div>
           <p class="mt-4 max-w-xl text-sm leading-7 text-slate-600">
             {{ companyDescription }}
           </p>

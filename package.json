@@ -1,11 +1,18 @@
 {
   "name": "nursery-monorepo",
   "private": true,
-  "workspaces": ["backend", "frontend"],
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
+    "start": "node ./tools/start-dev.mjs",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend start",
     "start:backend": "npm --prefix backend run start",
     "build:frontend": "npm --prefix frontend run build"
+  },
+  "dependencies": {
+    "aos": "^2.3.4"
   }
 }

@@ -10,11 +10,11 @@ const outputPath = path.join(projectRoot, 'src', 'assets', 'runtime-config.js');
 const apiBaseUrl =
   process.env.FRONTEND_API_BASE_URL ||
   process.env.NG_APP_API_BASE_URL ||
-  'https://nursery-fpgp.onrender.com/api';
+  'http://localhost:4000/api';
 const assetBaseUrl =
   process.env.FRONTEND_ASSET_BASE_URL ||
   process.env.NG_APP_ASSET_BASE_URL ||
-  'https://nursery-fpgp.onrender.com';
+  'http://localhost:4000';
 
 const fileContents = `window.__NURSERY_RUNTIME_CONFIG__ = ${JSON.stringify(
   {

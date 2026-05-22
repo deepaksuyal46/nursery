@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { PlantService } from '../../core/services/plant.service';
@@ -79,8 +80,10 @@ export class PlantsListComponent {
   readonly wishlistService = inject(WishlistService);
   private readonly toastService = inject(ToastService);
   private readonly authService = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   filters: PlantFilters = {
     page: 1,
@@ -90,24 +93,34 @@ export class PlantsListComponent {
   plantsPage: PaginatedResponse<Plant> | null = null;
 
   constructor() {
-    this.loadPlants();
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.filters = {
+        q: params.get('q')?.trim() || undefined,
+        category: params.get('category') || undefined,
+        minPrice: this.parseNumber(params.get('minPrice')),
+        maxPrice: this.parseNumber(params.get('maxPrice')),
+        inStock: params.get('inStock') === 'true' ? true : undefined,
+        sort: params.get('sort') || 'newest',
+        page: this.parseNumber(params.get('page')) ?? 1,
+        limit: 9
+      };
+      this.loadPlants();
+    });
   }
 
   applyFilters(filters: PlantFilters) {
-    this.filters = {
+    this.updateFilters({
       ...this.filters,
       ...filters,
       page: 1
-    };
-    this.loadPlants();
+    });
   }
 
   changePage(page: number) {
-    this.filters = {
+    this.updateFilters({
       ...this.filters,
       page
-    };
-    this.loadPlants();
+    });
   }
 
   onAddToCart(plantId: number) {
@@ -142,5 +155,29 @@ export class PlantsListComponent {
       this.plantsPage = page;
       this.changeDetectorRef.markForCheck();
     });
+  }
+
+  private updateFilters(filters: PlantFilters) {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        q: filters.q || null,
+        category: filters.category || null,
+        minPrice: filters.minPrice ?? null,
+        maxPrice: filters.maxPrice ?? null,
+        inStock: filters.inStock ? true : null,
+        sort: filters.sort && filters.sort !== 'newest' ? filters.sort : null,
+        page: filters.page && filters.page > 1 ? filters.page : null
+      }
+    });
+  }
+
+  private parseNumber(value: string | null) {
+    if (!value) {
+      return undefined;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
   }
 }

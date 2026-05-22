@@ -12,17 +12,18 @@ import router from './routes/index.js';
 
 const app = express();
 
-const allowedOrigins = [
-    env.clientUrl,
-    'http://localhost:4200',
-    'https://nursery-frontend-plum.vercel.app',
-    'https://nursery-frontend-clhxv3bll-deepaksuyal46s-projects.vercel.app'
-].filter(Boolean);
+const allowedOrigins = new Set(
+    [...env.clientUrls, 'http://localhost:4200', 'http://127.0.0.1:4200']
+        .map((origin) => origin.trim().replace(/\/+$/, ''))
+        .filter(Boolean)
+);
 
 app.use(
     cors({
         origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
+            const normalizedOrigin = origin?.trim().replace(/\/+$/, '');
+
+            if (!normalizedOrigin || allowedOrigins.has(normalizedOrigin)) {
                 return callback(null, true);
             }
             return callback(new Error(`CORS blocked for origin: ${origin}`));

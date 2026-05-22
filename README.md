@@ -52,6 +52,8 @@ Full-stack nursery e-commerce application built with Angular 19, Tailwind CSS, N
    cp backend/.env.example backend/.env
    ```
 
+   For local development, `npm start` prefers `backend/.env.local`. If that file is missing, it is created automatically from `backend/.env.example`.
+
 3. Apply schema and seed data:
 
    ```bash
@@ -66,24 +68,34 @@ Full-stack nursery e-commerce application built with Angular 19, Tailwind CSS, N
    npm install --prefix frontend
    ```
 
-5. Run the backend:
+5. Start the app from the repo root:
 
    ```bash
-   npm run dev:backend
+   npm start
    ```
 
-6. Run the frontend in a second terminal:
+   This starts both the backend and frontend with local-first defaults:
 
    ```bash
-   npm run dev:frontend
+   CLIENT_URL=http://localhost:4200
+   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/nursery_store
+   FRONTEND_API_BASE_URL=http://localhost:4000/api
+   FRONTEND_ASSET_BASE_URL=http://localhost:4000
    ```
 
-7. Open `http://localhost:4200`.
-API-backed features still require the backend running on `http://localhost:4000`.
+6. Open `http://localhost:4200`.
+
+You can still run the services separately with `npm run dev:backend` and `npm run dev:frontend`.
+API-backed features require the backend running on `http://localhost:4000`.
 
 ## Environment Variables
 
 Backend variables are in `backend/.env.example`.
+
+For CORS, set either:
+
+- `CLIENT_URL` for one frontend origin
+- `CLIENT_URLS` for a comma-separated list of allowed frontend origins
 
 Frontend API targets are currently defined in:
 

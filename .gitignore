@@ -3,9 +3,11 @@ dist/
 .angular/
 .env
 backend/.env
+backend/.env.local
 backend/uploads/*
 !backend/uploads/.gitkeep
 frontend/.angular/
 frontend/dist/
 frontend/.env
+frontend/.env.local
 .idea/workspace.xml

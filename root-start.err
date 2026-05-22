@@ -1,0 +1,176 @@
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+[1m[33mComponent HMR has been enabled, see https://angular.dev/hmr for more info.[39m[22m
+frontend exited with code 4294967295
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+on: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+Failed to start backend error: password authentication failed for user "postgres"
+    at C:\Users\Lalit Suyal\OneDrive\Desktop\Nursery\backend\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensurePendingRegistrationsTable (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/config/bootstrap.js:4:3)
+    at async start (file:///C:/Users/Lalit%20Suyal/OneDrive/Desktop/Nursery/backend/src/server.js:14:3) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
