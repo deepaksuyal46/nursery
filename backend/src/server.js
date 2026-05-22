@@ -4,11 +4,25 @@ import db from './config/db.js';
 import {
   getEmailDeliveryStatus,
   getEmailErrorDetails,
+  getEmailTransportLogContext,
   verifyEmailTransport
 } from './utils/mailer.js';
 
 let server = null;
 const PORT = process.env.PORT || 5000;
+
+const verifyEmailTransportInBackground = () => {
+  void verifyEmailTransport()
+    .then(() => {
+      console.info('Email delivery transport verified.', getEmailTransportLogContext());
+    })
+    .catch((error) => {
+      console.error('Email delivery transport verification failed', {
+        ...getEmailTransportLogContext(),
+        ...getEmailErrorDetails(error)
+      });
+    });
+};
 
 const start = async () => {
   await ensurePendingRegistrationsTable();
@@ -19,25 +33,17 @@ const start = async () => {
       missing: emailStatus.missing
     });
   } else {
-    if (emailStatus.warnings.length > 0) {
-      console.warn('Email delivery configuration warnings detected.', {
-        warnings: emailStatus.warnings
-      });
-    }
-
-    try {
-      await verifyEmailTransport();
-      console.info('Email delivery transport verified.', emailStatus.summary);
-    } catch (error) {
-      console.error('Email delivery transport verification failed.', {
-        ...emailStatus.summary,
-        ...getEmailErrorDetails(error)
-      });
-    }
+    emailStatus.warnings.forEach((warning) => {
+      console.warn(warning);
+    });
   }
 
   server = app.listen(Number(PORT), () => {
     console.log(`Nursery backend listening on port ${PORT}`);
+
+    if (emailStatus.configured) {
+      verifyEmailTransportInBackground();
+    }
   });
 };
 

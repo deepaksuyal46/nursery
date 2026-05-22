@@ -12,7 +12,9 @@ import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { signToken } from '../utils/jwt.js';
 import {
+  EMAIL_SERVICE_UNAVAILABLE_MESSAGE,
   getEmailErrorDetails,
+  getEmailTransportLogContext,
   isEmailDeliveryConfigured,
   sendRegistrationOtpEmail
 } from '../utils/mailer.js';
@@ -23,6 +25,12 @@ import {
   validateRegisterOtpVerifyPayload,
   validateRegisterPayload
 } from '../validators/auth.validator.js';
+
+const logDevRegistrationOtp = (email, otp) => {
+  if (env.nodeEnv !== 'production' || env.allowDevOtpInProduction) {
+    console.info(`[DEV OTP] Registration code for ${email}: ${otp}`);
+  }
+};
 
 export const requestRegistrationOtp = asyncHandler(async (req, res) => {
   const payload = validateRegisterPayload(req.body);
@@ -58,22 +66,22 @@ export const requestRegistrationOtp = asyncHandler(async (req, res) => {
     } catch (error) {
       console.error('Failed to send registration OTP email', {
         email: payload.email,
+        ...getEmailTransportLogContext(),
         ...getEmailErrorDetails(error)
       });
 
       if (env.allowDevOtpInProduction) {
         deliveryMethod = 'development';
-      } else if (error instanceof ApiError) {
-        throw error;
+        logDevRegistrationOtp(payload.email, otp);
       } else {
-        throw new ApiError(500, 'Unable to send the verification code. Please try again.');
+        throw new ApiError(503, EMAIL_SERVICE_UNAVAILABLE_MESSAGE);
       }
     }
   } else if (env.nodeEnv === 'production' && !env.allowDevOtpInProduction) {
-    throw new ApiError(503, 'Email service not configured.');
+    throw new ApiError(503, EMAIL_SERVICE_UNAVAILABLE_MESSAGE);
   } else {
     deliveryMethod = 'development';
-    console.info(`[DEV OTP] Registration code for ${payload.email}: ${otp}`);
+    logDevRegistrationOtp(payload.email, otp);
   }
 
   res.status(202).json({

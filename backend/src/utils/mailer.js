@@ -4,6 +4,13 @@ import env from '../config/env.js';
 import ApiError from './ApiError.js';
 
 const RESEND_API_URL = 'https://api.resend.com/emails';
+export const EMAIL_SERVICE_UNAVAILABLE_MESSAGE =
+  'Email service is temporarily unavailable. Please try again later.';
+const SMTP_TIMEOUTS = {
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000
+};
 
 let transporter = null;
 let transporterVerified = false;
@@ -53,7 +60,7 @@ export const getEmailDeliveryStatus = () => {
       }
     } else {
       if (env.smtpHost && env.smtpService) {
-        warnings.push('SMTP_HOST is set, so SMTP_SERVICE is ignored and host mode is used.');
+        warnings.push('SMTP_HOST is set; SMTP_SERVICE is ignored.');
       }
 
       if (!env.smtpUser) {
@@ -97,7 +104,6 @@ export const getEmailErrorDetails = (error) => {
   }
 
   const details = {
-    name: error.name,
     message: error.message
   };
 
@@ -109,16 +115,16 @@ export const getEmailErrorDetails = (error) => {
     details.command = error.command;
   }
 
-  if ('responseCode' in error && error.responseCode) {
-    details.responseCode = error.responseCode;
-  }
-
-  if ('response' in error && error.response) {
-    details.response = error.response;
-  }
-
   return details;
 };
+
+export const getEmailTransportLogContext = () => ({
+  host: env.smtpHost || env.smtpService || null,
+  port: env.smtpHost ? env.smtpPort : null,
+  secure: env.smtpHost ? env.smtpSecure : null,
+  user: env.smtpUser || null,
+  from: env.emailFrom || null
+});
 
 export const getEmailDeliveryHealth = () => {
   const status = getEmailDeliveryStatus();
@@ -169,12 +175,13 @@ const getHostTransportConfig = async () => {
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
-    }
+    },
+    ...SMTP_TIMEOUTS
   };
   const hostname = transportConfig.host;
 
   if (!hostname) {
-    throw new ApiError(503, 'Email service not configured.');
+    throw new ApiError(503, EMAIL_SERVICE_UNAVAILABLE_MESSAGE);
   }
 
   const ipv4Addresses = await dns.resolve4(hostname).catch(() => []);
@@ -193,28 +200,28 @@ const getHostTransportConfig = async () => {
   };
 };
 
+const getServiceTransportConfig = () => ({
+  service: env.smtpService,
+  auth: {
+    user: env.smtpUser,
+    pass: env.smtpPass
+  },
+  ...SMTP_TIMEOUTS
+});
+
 const getTransporter = async () => {
   if (getDeliveryMode() === 'resend') {
     return null;
   }
 
   if (!isEmailDeliveryConfigured()) {
-    throw new ApiError(
-      503,
-      'Email service not configured.'
-    );
+    throw new ApiError(503, EMAIL_SERVICE_UNAVAILABLE_MESSAGE);
   }
 
   if (!transporter) {
     const transportConfig = env.smtpHost
       ? await getHostTransportConfig()
-      : {
-          service: env.smtpService,
-          auth: {
-            user: env.smtpUser,
-            pass: env.smtpPass
-          }
-        };
+      : getServiceTransportConfig();
 
     transporter = nodemailer.createTransport(transportConfig);
   }
@@ -289,7 +296,7 @@ export const sendRegistrationOtpEmail = async ({ email, name, otp, expiresInMinu
       return;
     }
 
-    const mailer = await verifyEmailTransport();
+    const mailer = await getTransporter();
     const content = createEmailContent({ name, otp, expiresInMinutes });
 
     await mailer.sendMail({
@@ -299,6 +306,7 @@ export const sendRegistrationOtpEmail = async ({ email, name, otp, expiresInMinu
       text: content.text,
       html: content.html
     });
+    transporterVerified = true;
     lastEmailTransportError = null;
   } catch (error) {
     lastEmailTransportError = getEmailErrorDetails(error);
