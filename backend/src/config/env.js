@@ -55,7 +55,7 @@ const env = {
   emailProvider: (process.env.EMAIL_PROVIDER || '').trim().toLowerCase(),
   promailerApiKey: process.env.PROMAILER_API_KEY || '',
   promailerFromEmail: process.env.PROMAILER_FROM_EMAIL || '',
-  promailerFromName: process.env.PROMAILER_FROM_NAME || '',
+  promailerFromName: process.env.PROMAILER_FROM_NAME || 'Uttarakhand Succulent',
   otpExpiresMinutes: Number(process.env.OTP_EXPIRES_MINUTES || 10)
 };
 

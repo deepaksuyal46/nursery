@@ -4,13 +4,12 @@ import env from './env.js';
 const { Pool } = pg;
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || env.databaseUrl,
-  ssl:
-    env.nodeEnv === 'production'
-      ? {
-          rejectUnauthorized: false
-        }
-      : false
+  connectionString: env.databaseUrl,
+  ssl: env.databaseSsl
+    ? {
+        rejectUnauthorized: env.databaseSslRejectUnauthorized
+      }
+    : false
 });
 
 export const query = (text, params = []) => pool.query(text, params);

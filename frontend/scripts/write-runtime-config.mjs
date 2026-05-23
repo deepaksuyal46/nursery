@@ -10,11 +10,11 @@ const outputPath = path.join(projectRoot, 'src', 'assets', 'runtime-config.js');
 const apiBaseUrl =
   process.env.FRONTEND_API_BASE_URL ||
   process.env.NG_APP_API_BASE_URL ||
-  'http://localhost:4000/api';
+  'https://nursery-backend-csj3.onrender.com/api';
 const assetBaseUrl =
   process.env.FRONTEND_ASSET_BASE_URL ||
   process.env.NG_APP_ASSET_BASE_URL ||
-  'http://localhost:4000';
+  'https://nursery-backend-csj3.onrender.com';
 
 const fileContents = `window.__NURSERY_RUNTIME_CONFIG__ = ${JSON.stringify(
   {

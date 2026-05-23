@@ -11,11 +11,7 @@ import router from './routes/index.js';
 
 const app = express();
 const normalizeOrigin = (origin) => origin.trim().replace(/\/+$/, '');
-const allowedOrigins = [
-  'http://localhost:4200',
-  'http://localhost:3000',
-  process.env.CLIENT_URL
-]
+const allowedOrigins = [...new Set([...env.clientUrls, env.clientUrl, 'http://localhost:3000'])]
   .filter(Boolean)
   .map(normalizeOrigin);
 

@@ -9,7 +9,13 @@ export const EMAIL_SERVICE_UNAVAILABLE_MESSAGE =
 let providerConfigured = false;
 let lastEmailTransportError = null;
 
-const isPromailerProviderSelected = () => env.emailProvider === PROMAILER_PROVIDER;
+const getDeliveryMode = () => {
+  if (env.emailProvider === PROMAILER_PROVIDER || env.promailerApiKey) {
+    return PROMAILER_PROVIDER;
+  }
+
+  return 'disabled';
+};
 
 const getLegacyEmailWarnings = () => {
   const warnings = [];
@@ -39,14 +45,14 @@ const getLegacyEmailWarnings = () => {
 };
 
 export const isEmailDeliveryConfigured = () =>
-  isPromailerProviderSelected() &&
-  Boolean(env.promailerApiKey && env.promailerFromEmail && env.promailerFromName);
+  Boolean(env.promailerApiKey && env.promailerFromEmail);
 
 export const getEmailDeliveryStatus = () => {
   const missing = [];
   const warnings = [];
+  const mode = getDeliveryMode();
 
-  if (!isPromailerProviderSelected()) {
+  if (mode !== PROMAILER_PROVIDER) {
     missing.push('EMAIL_PROVIDER=promailer');
   }
 
@@ -58,19 +64,15 @@ export const getEmailDeliveryStatus = () => {
     missing.push('PROMAILER_FROM_EMAIL');
   }
 
-  if (!env.promailerFromName) {
-    missing.push('PROMAILER_FROM_NAME');
-  }
-
   warnings.push(...getLegacyEmailWarnings());
 
   return {
     configured: missing.length === 0,
-    mode: isPromailerProviderSelected() ? PROMAILER_PROVIDER : 'disabled',
+    mode,
     missing,
     warnings,
     summary: {
-      provider: isPromailerProviderSelected() ? PROMAILER_PROVIDER : null,
+      provider: mode === PROMAILER_PROVIDER ? PROMAILER_PROVIDER : null,
       fromEmail: env.promailerFromEmail || null,
       fromName: env.promailerFromName || null
     }
